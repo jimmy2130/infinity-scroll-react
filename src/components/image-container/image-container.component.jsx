@@ -6,6 +6,7 @@ import { Loader } from '../loader/loader.component';
 export const ImageContainer = () => {
   const [listItems, setListItems] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  const [firstFetch, setFirstFetch] = useState(true);
 
   useEffect(() => {
     function handleScroll() {
@@ -21,7 +22,7 @@ export const ImageContainer = () => {
   useEffect(() => {
     if (!isFetching) return;
     fetchMoreListItems();
-  }, [isFetching]);
+  }, [isFetching, firstFetch]);
 
 
 
@@ -40,15 +41,15 @@ export const ImageContainer = () => {
             title: item.alt_description,
           }
         })
-        setListItems(prevState => (prevState.concat(addedImage)/*[...prevState, ...addedImage]*/))
+        setListItems(prevState => (prevState.concat(addedImage)))
         setIsFetching(false);
-        //props.setIsFetching(false);
+        setFirstFetch(false);
       })
       .catch(err => console.log(err));
   }
 
   return(
-    isFetching ? (<Loader/>) : (
+    firstFetch ? (<Loader/>) : (
       <div className="image-container">
         {listItems.map((item, index) => (
           <Image key={index} item={item}/>
